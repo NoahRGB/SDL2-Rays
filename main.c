@@ -5,9 +5,10 @@
 #include "Vec2.h"
 #include "utils.h"
 #include "drawing.h"
+#include "array.h"
 
-#define WIDTH 1500 
-#define HEIGHT 1000 
+#define WIDTH 500 
+#define HEIGHT 500 
 #define OBJECT_COUNT 1
 
 typedef struct Ray {
@@ -78,39 +79,44 @@ int main(int argc, char* argv[]) {
     Circle light = (Circle){ (Vec2){ 200, 100 }, 30 };
     Circle* objects = (Circle*)malloc(sizeof(Circle) * OBJECT_COUNT);
     objects[0] = (Circle){ 300, 300, 30 };
+    
+    Array arr;
+    Vec2 test = { 1.0, 1.0 };
+    setArraySize(arr, 10);
+    setArrayElement(arr, 0, test);
+    Vec2 test2 = getArrayElement(arr, 0);
+    printf("%f, %f", test2.x, test2.y);
+    free(arr.data);
 
-    //float t1, t2;
-    //rayCircleIntersection((Ray){ (Vec2){ 50, 50 }, (Vec2){ 1, 0 }}, (Circle){ (Vec2){ 300, 50 }, 50 }, &t1, &t2);
-    //printf("intersection at: %f and %f\n", t1, t2); 
 
-    int running = 1;
-    while (running) {
-        running = !windowShouldClose();
-      
-        outlineCircle(objects[0], surface);
-        outlineCircle(light, surface);
-
-        int bottomY = light.center.y - light.radius;
-        int topY = light.center.y + light.radius;
-        int leftX = light.center.x - light.radius;
-        int rightX = light.center.x + light.radius;
-        for (int i = bottomY; i <= topY; i++) {
-            for (int j = leftX; j <= rightX; j++) {
-                Vec2 currentPixel = { j, i };
-                float dist = getDist(currentPixel, light.center);
-                if (dist >= light.radius - 1 && dist <= light.radius + 1) {
-                    Vec2 rayDir = normaliseVec2(subtractVec2(currentPixel, light.center));
-                    RayHit hit = rayCast((Ray){ currentPixel, rayDir }, objects);
-                    if (hit.t != -999) {
-                        drawLine(light.center, addVec2(currentPixel, multiplyVec2Float(rayDir, hit.t)), surface);
-                    }
-                }
-            }
-        }
-
-             
-        SDL_UpdateWindowSurface(window);
-    }
+//    int running = 1;
+//    while (running) {
+//        running = !windowShouldClose();
+//      
+//        outlineCircle(objects[0], surface);
+//        outlineCircle(light, surface);
+//
+//        int bottomY = light.center.y - light.radius;
+//        int topY = light.center.y + light.radius;
+//        int leftX = light.center.x - light.radius;
+//        int rightX = light.center.x + light.radius;
+//        for (int i = bottomY; i <= topY; i++) {
+//            for (int j = leftX; j <= rightX; j++) {
+//                Vec2 currentPixel = { j, i };
+//                float dist = getDist(currentPixel, light.center);
+//                if (dist >= light.radius - 1 && dist <= light.radius + 1) {
+//                    Vec2 rayDir = normaliseVec2(subtractVec2(currentPixel, light.center));
+//                    RayHit hit = rayCast((Ray){ currentPixel, rayDir }, objects);
+//                    if (hit.t != -999) {
+//                        drawLine(light.center, addVec2(currentPixel, multiplyVec2Float(rayDir, hit.t)), surface);
+//                    }
+//                }
+//            }
+//        }
+//
+//             
+//        SDL_UpdateWindowSurface(window);
+//    }
    
     free(objects);
     printf("Closing...");

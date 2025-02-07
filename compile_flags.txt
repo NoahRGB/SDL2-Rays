@@ -1,1 +1,1 @@
--IG:\dev\Code\lib\SDL2\include
+-IC:\Users\ncox2\dev\libs\SDL2NewNew\include
